@@ -1,0 +1,101 @@
+#Plz note this is still work in progress but feel free to use the code as you may see fit
+
+#A quick thank you to https://ytmp3.cc/en13/ & soundcloudtomp3.app for makeing this app possable. 
+
+#Import the need modules 
+import os,time,shutil
+from selenium import webdriver
+from playsound import playsound
+
+#Golbe varables 
+MP3Folder = "myMP3s"
+             
+
+#a function for soundcloudtMp3
+def soundcloudtMp3():
+    driver = webdriver.Chrome("chromedriver.exe")
+    driver.get("https://soundcloudtomp3.app/")
+    #Finds the ID of an elament on a page 
+    enter_searchbar = driver.find_element_by_name("formurl")
+    #Finds the URL surch bar and enters the suers URL 
+    enter_searchbar.send_keys(UsrURL)
+    #finds the downloud BTN on the web page by ID and clicks it
+    click_button = driver.find_element_by_id("fd")
+    click_button.click()
+    #Sleep to allow the webpage to loud
+    time.sleep(5)
+    #Finds & clicks the downloud BTN on the next page then waits 
+    click_button = driver.find_element_by_id("dlMP3")
+    click_button.click()
+    time.sleep(10)
+    #Close the open broswer window 
+    driver.close()
+    #Need to add a way to find the title of an MP3 and move thge file form downlouds to myMP3s folder
+
+def YouTubeMp3():
+    driver = webdriver.Chrome("chromedriver.exe")
+    driver.get("https://ytmp3.cc/en13/")
+    #Finds the ID of an elament on a page 
+    enter_searchbar = driver.find_element_by_id("input")
+    #Finds the URL surch bar and enters the suers URL 
+    enter_searchbar.send_keys(UsrURL)
+    #finds the downloud BTN on the web page by ID and clicks it
+    click_button = driver.find_element_by_id("submit")
+    click_button.click()
+    #Sleep to allow the webpage to loud
+    time.sleep(5)
+    #Finds & clicks the downloud BTN on the next page then waits 
+    click_button = driver.find_element_by_link_text("Download")
+    click_button.click()
+    time.sleep(10)
+
+    #Finds the title of the MP3 form the webpage 
+    Title = driver.find_element_by_id("title").text
+    #Need to add a file exn so you will see .mp3 here
+    
+    #Right now this is set only to work on my PC but will update this so to make it path independent do it can be used on any windoes or linux system at a later time 
+    Title = Title + ".mp3"
+    DownLoudedPath = r"C:\Users\Root\Downloads" + "\\" + Title
+    
+    shutil.move(DownLoudedPath, r"C:\Users\Root\Desktop\Python\myMP3s")
+    SongID = "myMP3s","\\"
+    
+    playsound(SongID,Title)
+       
+    #Close the open broswer window
+    driver.close()
+    
+
+#A method to check if there isa folder in place to store the MP3 files we downloud 
+def CheckForFolder():
+   if os.path.isdir(MP3Folder):
+     #Retruns nuthing and exits the method and will move on to the next line below   
+     return
+   else:
+      print("Folder not found")
+      os.mkdir(MP3Folder)
+      print("Added a folder in", os.getcwd(),"called ",MP3Folder )
+
+
+#call the method to check if there is play for us to store the files 
+CheckForFolder()
+
+while True:
+    print("**** Exmaple URL: https://soundcloud.com/daan-berends/im-the-melody-man?i ********* ")
+    UsrURL = input("Plases enter a URL address for me to convet to MP3, I accpet soundcloud and YouTube URLS: ")
+    #add code here to check if URL is soundcloud or youtube 
+    if "soundcloud" in UsrURL:
+      soundcloudtMp3()
+      print("File has been added to the folder", MP3Folder)
+      break
+
+    elif "youtube" in UsrURL:
+       YouTubeMp3()
+       break
+
+    else:
+       print("Not a vaiuld URL shell reset")
+   
+   
+
+
