@@ -2,7 +2,7 @@
 
 #A quick thank you to https://ytmp3.cc/en13/ & soundcloudtomp3.app for makeing this app possable. 
 
-#Import the need modules 
+#Import the need modules like selenium  we need this to open the broswer access the page 
 import os,time,shutil
 from selenium import webdriver
 from playsound import playsound
