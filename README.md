@@ -14,4 +14,4 @@ Still need to do:
 9) Wrap the above in a nice python GUI 
 10) list the Mp3s in the folder via GUI
 11) make the code useable on any system.  
-12) Brack and improve as I get better at  python
+12) Improve as I get better at  python
