@@ -1,26 +1,23 @@
-#Plz note this is still work in progress but feel free to use the code as you may see fit
-
 #A quick thank you to https://ytmp3.cc/en13/ & soundcloudtomp3.app for makeing this app possable. 
-
-#Import the need modules like selenium  we need this to open the broswer access the page 
-import os,time,shutil
-from selenium import webdriver
-from playsound import playsound
+#Import the needed libs 
+import os,time,shutil#for file manament  
+from selenium import webdriver#web driver 
+from playsound import playsound#Used for playing mp3s 
+import tkinter as tk
+from tkinter import*#both of these are needed for the GUI 
 
 #Golbe varables 
 MP3Folder = "myMP3s"
-             
-
-#a function for soundcloudtMp3
+          
 def soundcloudtMp3():
     driver = webdriver.Chrome("chromedriver.exe")
-    driver.get("https://soundcloudtomp3.app/")
+    driver.get("https://www.klickaud.co/")
     #Finds the ID of an elament on a page 
-    enter_searchbar = driver.find_element_by_name("formurl")
+    enter_searchbar = driver.find_element_by_name("value")
     #Finds the URL surch bar and enters the suers URL 
-    enter_searchbar.send_keys(UsrURL)
+    enter_searchbar.send_keys(UsrURL.get())
     #finds the downloud BTN on the web page by ID and clicks it
-    click_button = driver.find_element_by_id("fd")
+    click_button = driver.find_element_by_id("btn")
     click_button.click()
     #Sleep to allow the webpage to loud
     time.sleep(5)
@@ -28,9 +25,10 @@ def soundcloudtMp3():
     click_button = driver.find_element_by_id("dlMP3")
     click_button.click()
     time.sleep(10)
-    #Close the open broswer window 
+    #Close the open broswer window & clear the textbox 
+    UsrURL.delete(first=0,last=22)
     driver.close()
-    #Need to add a way to find the title of an MP3 and move thge file form downlouds to myMP3s folder
+    #Need to add a way to find the title of an MP3 and move the file form downlouds to myMP3s folder
 
 def YouTubeMp3():
     driver = webdriver.Chrome("chromedriver.exe")
@@ -38,7 +36,7 @@ def YouTubeMp3():
     #Finds the ID of an elament on a page 
     enter_searchbar = driver.find_element_by_id("input")
     #Finds the URL surch bar and enters the suers URL 
-    enter_searchbar.send_keys(UsrURL)
+    enter_searchbar.send_keys(UsrURL.get())
     #finds the downloud BTN on the web page by ID and clicks it
     click_button = driver.find_element_by_id("submit")
     click_button.click()
@@ -52,17 +50,16 @@ def YouTubeMp3():
     #Finds the title of the MP3 form the webpage 
     Title = driver.find_element_by_id("title").text
     #Need to add a file exn so you will see .mp3 here
-    
-    #Right now this is set only to work on my PC but will update this so to make it path independent do it can be used on any windoes or linux system at a later time 
     Title = Title + ".mp3"
     DownLoudedPath = r"C:\Users\Root\Downloads" + "\\" + Title
     
+    #fix this 
     shutil.move(DownLoudedPath, r"C:\Users\Root\Desktop\Python\myMP3s")
     SongID = "myMP3s","\\"
     
     playsound(SongID,Title)
        
-    #Close the open broswer window
+    UsrURL.delete(first=0,last=22)
     driver.close()
     
 
@@ -76,26 +73,43 @@ def CheckForFolder():
       os.mkdir(MP3Folder)
       print("Added a folder in", os.getcwd(),"called ",MP3Folder )
 
+def Check_URL():#a method to call to check the URL 
+    if "soundcloud" in UsrURL.get():#if the suer enters a soundcloud do the following
+       soundcloudtMp3()
+
+    elif "youtube" in UsrURL.get():#if the suer enters a youtube do the following
+       YouTubeMp3()
+            
+    else:#pop up window to tell the uaser they entered invalid URL 
+       UsrURL.delete(first=0,last=22)#Clear the textbox 
+       msg = "Entered invalid URL! A vailied URL should look something like: https://www.youtube.com/watch?v=I9PhfUsFvj0 "
+       popup = tk.Tk()
+       popup.wm_title("Invalid URL!")
+       label = tk.Label(popup, text=msg)
+       label.pack(side="top", fill="x", pady=10)
+       B1 = tk.Button(popup, text="Okay", command = popup.destroy)
+       B1.pack()
+       popup.mainloop()
+
 
 #call the method to check if there is play for us to store the files 
 CheckForFolder()
 
-while True:
-    print("**** Exmaple URL: https://soundcloud.com/daan-berends/im-the-melody-man?i ********* ")
-    UsrURL = input("Plases enter a URL address for me to convet to MP3, I accpet soundcloud and YouTube URLS: ")
-    #add code here to check if URL is soundcloud or youtube 
-    if "soundcloud" in UsrURL:
-      soundcloudtMp3()
-      print("File has been added to the folder", MP3Folder)
-      break
 
-    elif "youtube" in UsrURL:
-       YouTubeMp3()
-       break
+root = tk.Tk()
+w = Label(root, text="Enter youTube or soundcloud URL:")
+w.grid(column = 0, row = 1)
 
-    else:
-       print("Not a vaiuld URL shell reset")
-   
-   
+UsrURL = tk.Entry(root)
+UsrURL.grid(column = 1, row = 1)
+
+
+btn1= tk.Button(text="Get MP3 file",command=Check_URL)
+btn1.grid(column = 0, row = 2)
+btn2= tk.Button(text="Close",command=quit)
+btn2.grid(column = 1, row = 2)
+
+root.mainloop()
+
 
 
