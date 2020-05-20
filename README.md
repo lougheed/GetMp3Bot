@@ -4,7 +4,7 @@ This is still a work in progress so I will push updates as I make them,
 Steps to follow 
 
 ## Usage:
-Run the file and enter a youtube or soundcloud file to into the GUI and hit the get MP£ file buttion  
+Run the file and enter a youtube or soundcloud URL into the GUI and hit the get MP3 file buttion  
 
 ## The plan/ to be updated:
 1) Check to see if the folder is already there , if not make one - dome
